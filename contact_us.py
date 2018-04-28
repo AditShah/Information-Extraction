@@ -17,52 +17,24 @@ LOAD_TIME = 20 #seconds
 MAX_TAB = 10
 PAGE_LOAD_TIMEOUT = 25 #seconds
 
-
-def get_clear_browsing_button(driver):
-    """Find the "CLEAR BROWSING BUTTON" on the Chrome settings page."""
-    return driver.find_element_by_css_selector('* /deep/ #clearBrowsingDataConfirm')
-
-
-def clear_cache(driver, timeout=CLEAR_CACHE_TIMEOUT):
-    """Clear the cookies and cache for the ChromeDriver instance."""
-    # navigate to the settings page
-    browser.switch_to_window(browser.window_handles[0])
-    browser.execute_script("window.open('');")
-    driver.switch_to_window(driver.window_handles[-1])
-    driver.get('chrome://settings/clearBrowserData')
-
-    # wait for the button to appear
-    try:
-        wait = WebDriverWait(driver, timeout)
-    except Exception as ex:
-        return
-    wait.until(get_clear_browsing_button)
-
-    # click the button to clear the cache
-    get_clear_browsing_button(driver).click()
-
-    # wait for the button to be gone before returning
-    wait.until_not(get_clear_browsing_button)
-    browser.switch_to_window(browser.window_handles[0])
-    driver.close()
-
-    
+   
 #To run browser in background
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
 options.add_argument('window-size=1200x600')
 
-browser = webdriver.Chrome("chromedriver", options=options)
+browser = webdriver.Chrome("chromedriver", options = options)
 browser.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
 
 #in has list of websites with each link in a new line
-with open("in2.txt") as urlList:
+with open("in.txt") as urlList:
     websites = []
     for line in urlList:
         websites.append(line.strip())
 
 contactNotFound = []
 timeOut = []
+contactPage = open("contactPages", "w+")
 
 count = 0
 i = 0
@@ -82,7 +54,7 @@ def close_browser():
             browser.close()
     
     except Exception as ex:
-        browser = webdriver.Chrome("chromedriver", options=options)
+        browser = webdriver.Chrome("chromedriver", options = options)
         browser.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
 
 
@@ -132,8 +104,8 @@ while i < len(websites):
             
             foundContact.append(website)
             for link in foundContact:
-                print(addWWW(link).strip())
-            print("$$$$$$")
+                contactPage.write((addWWW(link).strip()) + "\n")
+            contactPage.write("$$$$$$\n")
             browser.close()
             del foundContact[:]
     

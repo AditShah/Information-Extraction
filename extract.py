@@ -39,10 +39,10 @@ with open("citiesOfIndia") as cityFile:
     for line in cityFile:
         cities.add(line.strip().lower())
 
-addressFile = open("./output/address","w+")
-citiesFile = open("./output/city","w+")
-statesFile = open("./output/state","w+")
-phoneFile = open("./output/phone","w+")
+addressFile = open("./info/address","w+")
+citiesFile = open("./info/city","w+")
+statesFile = open("./info/state","w+")
+phoneFile = open("./info/phone","w+")
 
 #pincode regex
 pincode = re.compile(r"\D(\d{3}[-\s*]?\d{3})\D")
@@ -175,7 +175,7 @@ def findPhoneNo(pageContent, website):
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
 options.add_argument('window-size=1200x600')
-browser = webdriver.Chrome("chromedriver")
+browser = webdriver.Chrome("chromedriver", options = options)
 browser.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
 
 def close_browser(driver):
@@ -185,7 +185,7 @@ def close_browser(driver):
             driver.close()
     
     except Exception as ex:
-        browser = webdriver.Chrome("chromedriver")
+        browser = webdriver.Chrome("chromedriver", options = options)
         browser.set_page_load_timeout(PAGE_LOAD_TIMEOUT)
     
     return browser
